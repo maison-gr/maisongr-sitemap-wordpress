@@ -1,5 +1,5 @@
 === Maison GR Sitemap ===
-Contributors: maisongr
+Contributors: fadhlaouir
 Tags: sitemap, xml sitemap, seo, google, search engines
 Requires at least: 6.5
 Tested up to: 7.1
@@ -60,6 +60,10 @@ Yes, with the `maisongr_sitemap_post_types` and `maisongr_sitemap_taxonomies` fi
 = Is it cloaking to show people a page and crawlers XML? =
 
 No. Both list exactly the same addresses: one list presented two ways. The page is noindex.
+
+== Screenshots ==
+
+1. The sitemap page in Twenty Twenty-Five: every page, grouped by section, with a filter and a newest-first sort.
 
 == Changelog ==
 
