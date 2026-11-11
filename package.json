@@ -1,0 +1,19 @@
+{
+  "name": "maisongr-sitemap-wordpress",
+  "private": true,
+  "description": "Development tools for the Maison GR Sitemap WordPress plugin: the page's assets, the parity test and the release zip.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "assets": "node scripts/assets.mjs",
+    "test": "node --test \"test/*.test.mjs\"",
+    "zip": "node scripts/zip.mjs"
+  },
+  "devDependencies": {
+    "@wp-playground/cli": "3.1.64",
+    "maisongr-sitemap": "1.7.0"
+  }
+}

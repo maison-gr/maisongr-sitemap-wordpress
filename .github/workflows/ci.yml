@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (PHP ${{ matrix.php }}, WordPress ${{ matrix.wp }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The oldest versions the plugin supports, today's default, and the newest PHP.
+          - { php: "7.4", wp: "6.5" }
+          - { php: "8.3", wp: "latest" }
+          - { php: "8.5", wp: "latest" }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+        env:
+          WP_PHP: ${{ matrix.php }}
+          WP_VERSION: ${{ matrix.wp != 'latest' && matrix.wp || '' }}
+
+  assets:
+    name: Assets match maisongr-sitemap
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # The page's rules and script are generated from the package: a hand edit, or a package
+      # update without `npm run assets`, fails here.
+      - run: npm run assets && git diff --exit-code maisongr-sitemap/assets
+
+  zip:
+    name: Release zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: git archive --format=zip --prefix=maisongr-sitemap/ -o maisongr-sitemap.zip HEAD:maisongr-sitemap
+      - run: unzip -l maisongr-sitemap.zip | grep -E "maisongr-sitemap/(maisongr-sitemap\.php|readme\.txt|assets/page\.js)$"

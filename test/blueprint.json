@@ -1,0 +1,10 @@
+{
+  "steps": [
+    { "step": "setSiteOptions", "options": { "blogname": "Fern & Oak", "permalink_structure": "/%postname%/" } },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; $c = wp_insert_term('Recipes', 'category'); foreach (['Sourdough starter', 'Rye loaf', 'Focaccia'] as $t) { wp_insert_post(['post_title' => $t, 'post_status' => 'publish', 'post_content' => 'Text', 'post_category' => [$c['term_id']], 'post_modified_gmt' => '2026-10-01 12:00:00']); } wp_insert_post(['post_title' => 'About us', 'post_type' => 'page', 'post_status' => 'publish']); $n = wp_insert_post(['post_title' => 'Thank you', 'post_type' => 'page', 'post_status' => 'publish']); update_post_meta($n, '_yoast_wpseo_meta-robots-noindex', '1'); $r = wp_insert_post(['post_title' => 'Order sent', 'post_type' => 'page', 'post_status' => 'publish']); update_post_meta($r, 'rank_math_robots', ['noindex']); wp_insert_post(['post_title' => 'Members', 'post_status' => 'publish', 'post_password' => 'x']); wp_insert_post(['post_title' => 'Draft idea', 'post_status' => 'draft']);"
+    },
+    { "step": "activatePlugin", "pluginPath": "/wordpress/wp-content/plugins/maisongr-sitemap/maisongr-sitemap.php" }
+  ]
+}
