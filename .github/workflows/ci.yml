@@ -46,6 +46,16 @@ jobs:
       # update without `npm run assets`, fails here.
       - run: npm run assets && git diff --exit-code maisongr-sitemap/assets
 
+  plugin-check:
+    name: WordPress Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The checks WordPress.org's reviewers run: security, escaping, the readme, the header, i18n.
+      - uses: wordpress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1.1.9
+        with:
+          build-dir: ./maisongr-sitemap
+
   zip:
     name: Release zip
     runs-on: ubuntu-latest

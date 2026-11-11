@@ -1,5 +1,5 @@
 === Maison GR Sitemap ===
-Contributors: maisongr
+Contributors: fadhlaouir
 Tags: sitemap, xml sitemap, seo, google, search engines
 Requires at least: 6.5
 Tested up to: 7.1
