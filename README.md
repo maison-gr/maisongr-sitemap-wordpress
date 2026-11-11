@@ -64,7 +64,7 @@ Filters:
 | `maisongr_sitemap_post_types` | The post types listed. Default: every public type but attachments. |
 | `maisongr_sitemap_taxonomies` | The taxonomies whose term archives are listed. Return `[]` to list none. |
 | `maisongr_sitemap_theme` | The look: `name`, `light` palette, `fonts`, `icon`. |
-| `maisongr_sitemap_credit` | Whether the page shows its "Made with maisongr-sitemap" line. Default `true`. |
+| `maisongr_sitemap_credit` | Whether the page shows its "Made with maisongr-sitemap" line. Default `false`: a credit on the public site is the site owner's choice. |
 
 The list is cached for an hour, and read again whenever content, the theme or the permalinks change.
 
