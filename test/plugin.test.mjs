@@ -4,7 +4,7 @@
 //    and replaces WordPress's own sitemap.
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -17,6 +17,8 @@ const posix = (p) => p.split("\\").join("/");
 const PORT = 9400 + Math.floor(Math.random() * 400);
 const BASE = `http://127.0.0.1:${PORT}`;
 let server;
+/** The folder holding the run's blueprint, removed when the tests end. */
+let scratch;
 
 /**
  * The test site's blueprint, on the PHP and WordPress versions asked for (WP_PHP=7.4 WP_VERSION=6.5 npm test).
@@ -24,7 +26,8 @@ let server;
  */
 function blueprint() {
   const steps = JSON.parse(readFileSync(join(root, "test", "blueprint.json"), "utf8"));
-  const file = join(mkdtempSync(join(tmpdir(), "mgr-wp-")), "blueprint.json");
+  scratch = mkdtempSync(join(tmpdir(), "mgr-wp-"));
+  const file = join(scratch, "blueprint.json");
   writeFileSync(file, JSON.stringify({ ...steps, preferredVersions: { php: process.env.WP_PHP ?? "8.3", wp: process.env.WP_VERSION ?? "latest" } }));
   return file;
 }
@@ -51,7 +54,10 @@ before(async () => {
   throw new Error(`Playground did not start: ${log}`);
 });
 
-after(() => server?.kill());
+after(() => {
+  server?.kill();
+  if (scratch) rmSync(scratch, { recursive: true, force: true });
+});
 
 const browser = { "Sec-Fetch-Dest": "document", Accept: "text/html,application/xhtml+xml" };
 const get = (path, headers = {}) => fetch(`${BASE}${path}`, { headers, redirect: "manual" });
