@@ -61,6 +61,10 @@ Yes, with the `maisongr_sitemap_post_types` and `maisongr_sitemap_taxonomies` fi
 
 No. Both list exactly the same addresses: one list presented two ways. The page is noindex.
 
+== Screenshots ==
+
+1. The sitemap page in Twenty Twenty-Five: every page, grouped by section, with a filter and a newest-first sort.
+
 == Changelog ==
 
 = 1.0.0 =
