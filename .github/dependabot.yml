@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # The official Actions the workflows use.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  # Development tools only: the plugin itself is PHP and ships no npm code.
+  # maisongr-sitemap is left out: its updates come with `npm run assets` and a parity check, by hand.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: maisongr-sitemap
+    groups:
+      dev-tools:
+        patterns: ["*"]

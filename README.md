@@ -1,6 +1,14 @@
 # Maison GR Sitemap for WordPress
 
-One sitemap, two readers. Search engines get the XML they need at `/sitemap.xml`. A person who opens the same address gets a page set in your theme's own colours and type, with every page listed, grouped by section and searchable.
+**One sitemap, two readers.** Search engines get the XML they need at `/sitemap.xml`. A person who opens the same address gets a page set in your theme's own colours and type, with every page listed, grouped by section and searchable.
+
+[![CI](https://github.com/maison-gr/maisongr-sitemap-wordpress/actions/workflows/ci.yml/badge.svg)](https://github.com/maison-gr/maisongr-sitemap-wordpress/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-1b1a17)](LICENSE)
+![WordPress 6.5+](https://img.shields.io/badge/WordPress-%E2%89%A56.5-1b1a17)
+![PHP 7.4+](https://img.shields.io/badge/PHP-%E2%89%A57.4-1b1a17)
+![No settings to learn](https://img.shields.io/badge/settings-none-1b1a17)
+
+![One address, two answers: at https://your.site/sitemap.xml, Google and Bing get the standard XML sitemap, and a person opening the same address in a browser gets a page in the site's own design.](.github/assets/hero.png)
 
 It's the WordPress edition of [maisongr-sitemap](https://github.com/maison-gr/maisongr-sitemap), the sitemap tool for Next.js, Astro, Nuxt and other frameworks. Both render the same page from the same design, and a test checks they match byte for byte.
 
@@ -32,7 +40,7 @@ Deactivating the plugin brings WordPress's own sitemap back.
 
 ## Install
 
-Download `maisongr-sitemap.zip` from the [latest release](https://github.com/maison-gr/maisongr-sitemap-wordpress/releases), then in WordPress: **Plugins → Add New Plugin → Upload Plugin**. Activate it, and open `/sitemap.xml`.
+The first release, and the listing on WordPress.org, come in December 2026. Until then, build the zip from this repository (`npm ci && npm run zip`, see [Working on the plugin](#working-on-the-plugin)), then in WordPress: **Plugins → Add New Plugin → Upload Plugin**. Activate it, and open `/sitemap.xml`.
 
 Requires WordPress 6.5 or later and PHP 7.4 or later.
 
@@ -73,6 +81,10 @@ npm run zip    # dist/maisongr-sitemap.zip, ready to upload
 
 `WP_PHP=7.4 WP_VERSION=6.5 npm test` runs the tests on other versions.
 
+## Contributing
+
+Issues and pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md), and report security problems privately ([SECURITY.md](SECURITY.md)).
+
 ## License
 
-[MIT](LICENSE), by [Maison GR](https://www.maisongr.com).
+[MIT](LICENSE), by [Maison GR](https://www.maisongr.com). Other open-source work from the studio: [maisongr-sitemap](https://github.com/maison-gr/maisongr-sitemap) for Next.js, Astro, Nuxt and more, and [maisongr-skills](https://github.com/maison-gr/maisongr-skills) for AI coding agents.
