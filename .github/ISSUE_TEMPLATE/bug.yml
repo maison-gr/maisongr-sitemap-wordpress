@@ -1,0 +1,33 @@
+name: Bug report
+description: Something in the sitemap or its page is wrong.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+      description: A missing or extra page, a wrong date, the page not in your theme's look, a redirect…
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: WordPress, PHP and plugin versions
+      placeholder: WordPress 7.1, PHP 8.3, Maison GR Sitemap 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: theme
+    attributes:
+      label: Theme
+      placeholder: Twenty Twenty-Five, Astra, a custom block theme…
+  - type: textarea
+    id: plugins
+    attributes:
+      label: SEO and language plugins
+      description: Yoast SEO, Rank Math, Polylang, WPML… and whether their own sitemap is on.
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The post types or pages involved. Leave out anything private.
