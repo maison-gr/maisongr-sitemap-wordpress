@@ -57,6 +57,10 @@ Use one sitemap. If Yoast SEO, Rank Math or All in One SEO also makes one, the p
 
 Yes, with the `maisongr_sitemap_post_types` and `maisongr_sitemap_taxonomies` filters. `maisongr_sitemap_entries` changes the final list.
 
+= Does the page link to the plugin's authors? =
+
+Not unless you choose to. To show a "Made with maisongr-sitemap" line at the foot of the page, add `add_filter( 'maisongr_sitemap_credit', '__return_true' );`.
+
 = Is it cloaking to show people a page and crawlers XML? =
 
 No. Both list exactly the same addresses: one list presented two ways. The page is noindex.

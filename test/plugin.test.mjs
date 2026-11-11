@@ -40,6 +40,7 @@ before(async () => {
     "--mount-dir", posix(join(root, "maisongr-sitemap")), "/wordpress/wp-content/plugins/maisongr-sitemap",
     "--mount-dir", posix(join(root, "test", "harness")), "/wordpress/maisongr-test",
     "--mount-dir", posix(join(root, "test", "harness", "no-redirect.php")), "/internal/shared/mu-plugins/sitemap-redirect.php",
+    "--mount-dir", posix(join(root, "test", "harness", "credit-opt-in.php")), "/internal/shared/mu-plugins/credit-opt-in.php",
     "--blueprint", posix(blueprint()),
   ], { stdio: ["ignore", "ignore", "pipe"] });
   let log = "";
@@ -162,6 +163,11 @@ describe("the sitemap on a WordPress site", () => {
     const xml = await (await get("/sitemap.xml")).text();
     const paths = (s, re) => [...s.matchAll(re)].map((m) => m[1].replace(BASE, "")).sort();
     assert.deepEqual(paths(html, /class="url" href="([^"]+)"/g), paths(xml, /<loc>([^<]+)<\/loc>/g));
+  });
+
+  it("shows no credit link unless the site opts in (WordPress.org guideline 10)", async () => {
+    assert.doesNotMatch(await (await get("/sitemap.xml", browser)).text(), /class="credit"/);
+    assert.match(await (await get("/sitemap.xml?credit=1", browser)).text(), /<p class="credit">.*maisongr-sitemap/);
   });
 
   it("serves the page's stylesheet in the theme's colours and fonts, and its script", async () => {

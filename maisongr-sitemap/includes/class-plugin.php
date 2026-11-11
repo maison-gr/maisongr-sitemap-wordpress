@@ -122,11 +122,12 @@ final class Plugin {
 	private static function page_options(): array {
 		$home = (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH );
 		/**
-		 * Filters whether the page shows its "Made with maisongr-sitemap" line. Default true.
+		 * Filters whether the page shows its "Made with maisongr-sitemap" line. Default false:
+		 * a credit on the public site is the site owner's choice (WordPress.org guideline 10).
 		 *
 		 * @param bool $credit Whether to show it.
 		 */
-		$credit = (bool) apply_filters( 'maisongr_sitemap_credit', true );
+		$credit = (bool) apply_filters( 'maisongr_sitemap_credit', false );
 		return array(
 			'credit' => $credit,
 			'home'   => '' !== $home ? $home : '/',
