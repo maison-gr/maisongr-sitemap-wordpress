@@ -40,7 +40,15 @@ final class Entries {
 
 	/** @return array<int, array<string, mixed>> */
 	public static function collect(): array {
+		// WPML filters queries to the current language: list every language, then switch back.
+		$wpml = apply_filters( 'wpml_current_language', null );
+		if ( $wpml ) {
+			do_action( 'wpml_switch_language', 'all' );
+		}
 		$entries = array_merge( self::home(), self::posts(), self::terms() );
+		if ( $wpml ) {
+			do_action( 'wpml_switch_language', $wpml );
+		}
 		$seen    = array();
 		$once    = array();
 		foreach ( $entries as $e ) {
@@ -92,10 +100,10 @@ final class Entries {
 		} else {
 			$latest  = get_posts(
 				array(
-					'numberposts'      => 1,
-					'post_type'        => 'post',
-					'orderby'          => 'modified',
-					'suppress_filters' => true,
+					'numberposts' => 1,
+					'post_type'   => 'post',
+					'orderby'     => 'modified',
+					'lang'        => '',
 				)
 			);
 			$lastmod = $latest ? self::day( $latest[0]->post_modified_gmt ) : null;
@@ -224,8 +232,7 @@ final class Entries {
 					'no_found_rows'          => true,
 					'ignore_sticky_posts'    => true,
 					'update_post_term_cache' => false,
-					// Every language, not only the current one (WPML and Polylang filter queries by language).
-					'suppress_filters'       => true,
+					// Every language, not only the current one: Polylang reads lang, WPML is switched to all in collect().
 					'lang'                   => '',
 				)
 			);

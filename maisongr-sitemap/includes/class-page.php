@@ -265,11 +265,12 @@ final class Page {
 			. '<title>' . self::esc( $title ) . ' · ' . self::esc( $theme['name'] ) . "</title>\n"
 			. ( ! empty( $theme['icon'] ) ? '<link rel="icon" href="' . self::esc( $theme['icon'] ) . '">' : '' ) . "\n"
 			. implode( "\n", $preload ) . "\n"
-			. '<link rel="stylesheet" href="' . self::esc( $assets['css'] ) . "\">\n</head>\n<body>\n<main class=\"page\">\n"
+			// The sitemap page is a document of its own at /sitemap.xml, outside any theme: nothing is enqueued there.
+			. '<link rel="stylesheet" href="' . self::esc( $assets['css'] ) . "\">\n</head>\n<body>\n<main class=\"page\">\n" // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
 			. '<a class="brand" href="' . self::esc( $options['home'] ?? '/' ) . '">' . self::esc( $theme['name'] ) . "</a>\n"
 			. $body . "\n"
 			. "<footer class=\"foot\"><p class=\"about\">{$about}</p>{$credit}</footer>\n</main>\n"
-			. '<script src="' . self::esc( $assets['js'] ) . "\" defer></script>\n</body>\n</html>";
+			. '<script src="' . self::esc( $assets['js'] ) . "\" defer></script>\n</body>\n</html>"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
 	}
 
 	/**
