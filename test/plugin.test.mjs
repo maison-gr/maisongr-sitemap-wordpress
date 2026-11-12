@@ -117,15 +117,12 @@ describe("parity with the maisongr-sitemap package", () => {
     ["a theme without fonts, dark mode or icon", entries.slice(4, 8), { name: "Orbit", light: theme.light, fonts: [] }, { lang: "fr" }],
     ["no pages yet", [], theme, {}],
   ];
-  // maisongr-sitemap 1.7.0 links the repository's old address, which redirects; its next release
-  // and this plugin link the current one. Remove this once the package dependency is 1.8.0.
-  const current = (html) => html.replaceAll('href="https://github.com/maison-gr/sitemap"', 'href="https://github.com/maison-gr/maisongr-sitemap"');
 
   for (const [name, list, t, options] of cases) {
     it(`renders the same page, stylesheet and XML: ${name}`, async () => {
       const out = await php({ entries: list, parts, theme: t, options });
-      assert.equal(out.page, current(urlsetPage(list, t, options)));
-      assert.equal(out.index, current(indexPage(parts, t, options)));
+      assert.equal(out.page, urlsetPage(list, t, options));
+      assert.equal(out.index, indexPage(parts, t, options));
       assert.equal(out.css, pageCss(t));
       assert.equal(out.xmlCss, await xmlCss(t, options.lang));
       assert.equal(out.xml, urlsetXml(list, "/sitemap.xml?asset=xml.css"));
