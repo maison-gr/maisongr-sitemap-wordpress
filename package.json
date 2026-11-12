@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@wp-playground/cli": "3.1.64",
-    "maisongr-sitemap": "1.8.0"
+    "maisongr-sitemap": "1.8.1"
   },
   "overrides": {
     "isomorphic-git": "^1.38.6",
