@@ -21,7 +21,11 @@ $input   = json_decode( (string) file_get_contents( 'php://input' ), true );
 $entries = $input['entries'] ?? array();
 $parts   = $input['parts'] ?? array();
 $theme   = $input['theme'];
-$options = $input['options'] ?? array();
+// On a site, WordPress prints these two tags (Plugin::page_options()); here they are the package's own.
+$options = ( $input['options'] ?? array() ) + array(
+	'styles'  => '<link rel="stylesheet" href="?asset=page.css">',
+	'scripts' => '<script src="?asset=page.js" defer></script>',
+);
 $rules   = (string) preg_replace( '#^/\*.*?\*/\n#s', '', (string) file_get_contents( $plugin . 'assets/page-rules.css' ), 1 );
 
 header( 'Content-Type: application/json' );

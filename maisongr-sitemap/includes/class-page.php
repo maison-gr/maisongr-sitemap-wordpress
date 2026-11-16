@@ -3,7 +3,8 @@
  * The sitemap as a person sees it, as the maisongr-sitemap package renders it
  * (src/page.ts): the same addresses the XML lists, set in the site's own colours
  * and type, grouped by section, with a filter. No inline script or style: both
- * load from the sitemap's own address (?asset=page.css, ?asset=page.js).
+ * load from the sitemap's own address (?asset=page.css, ?asset=page.js), registered
+ * with WordPress and printed by it (Plugin::page_options()).
  *
  * The output must match the package's byte for byte; test/parity.mjs checks it.
  * The stylesheet's rules and the script are generated from the package
@@ -243,13 +244,12 @@ final class Page {
 	}
 
 	/**
-	 * @param array{credit?: bool, assets?: array{css: string, js: string}, home?: string, lang?: string} $options
+	 * The stylesheet and script tags come in ready-made: the plugin registers both with
+	 * WordPress and prints them with wp_print_styles() and wp_print_scripts().
+	 *
+	 * @param array{credit?: bool, styles?: string, scripts?: string, home?: string, lang?: string} $options
 	 */
 	private static function shell( array $theme, string $title, string $body, array $options, ?int $updated = null ): string {
-		$assets  = $options['assets'] ?? array(
-			'css' => '?asset=page.css',
-			'js'  => '?asset=page.js',
-		);
 		$t       = new Strings( $options['lang'] ?? null );
 		$about   = ( null !== $updated ? '<span>' . self::esc( $t->updated( $updated ) ) . '</span>' : '' ) . '<span>' . self::esc( $t->get( 'footer' ) ) . '</span>';
 		$preload = array();
@@ -265,12 +265,11 @@ final class Page {
 			. '<title>' . self::esc( $title ) . ' · ' . self::esc( $theme['name'] ) . "</title>\n"
 			. ( ! empty( $theme['icon'] ) ? '<link rel="icon" href="' . self::esc( $theme['icon'] ) . '">' : '' ) . "\n"
 			. implode( "\n", $preload ) . "\n"
-			// The sitemap page is a document of its own at /sitemap.xml, outside any theme: nothing is enqueued there.
-			. '<link rel="stylesheet" href="' . self::esc( $assets['css'] ) . "\">\n</head>\n<body>\n<main class=\"page\">\n" // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet
+			. trim( $options['styles'] ?? '' ) . "\n</head>\n<body>\n<main class=\"page\">\n"
 			. '<a class="brand" href="' . self::esc( $options['home'] ?? '/' ) . '">' . self::esc( $theme['name'] ) . "</a>\n"
 			. $body . "\n"
 			. "<footer class=\"foot\"><p class=\"about\">{$about}</p>{$credit}</footer>\n</main>\n"
-			. '<script src="' . self::esc( $assets['js'] ) . "\" defer></script>\n</body>\n</html>"; // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedScript
+			. trim( $options['scripts'] ?? '' ) . "\n</body>\n</html>";
 	}
 
 	/**
