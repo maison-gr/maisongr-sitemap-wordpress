@@ -178,6 +178,18 @@ describe("the sitemap on a WordPress site", () => {
     assert.match(await js.text(), /^\(function \(\) \{/);
   });
 
+  it("loads the page's stylesheet and script through WordPress's enqueue API", async () => {
+    const html = await (await get("/sitemap.xml", browser)).text();
+    const css = html.match(/<link rel=['"]stylesheet['"][^>]*>/)?.[0] ?? "";
+    assert.match(css, /id=['"]maisongr-sitemap-page-css['"]/);
+    assert.match(css, /href=['"][^'"]*\/sitemap\.xml\?asset=page\.css&(?:amp;|#038;)?ver=[\d.]+['"]/);
+    const js = html.match(/<script [^>]*src=[^>]*>/)?.[0] ?? "";
+    assert.match(js, /id=['"]maisongr-sitemap-page-js['"]/);
+    assert.match(js, /\bdefer\b/);
+    assert.match(js, /src=['"][^'"]*\/sitemap\.xml\?asset=page\.js&(?:amp;|#038;)?ver=[\d.]+['"]/);
+    assert.ok(html.indexOf(js) > html.indexOf("</main>"), "the script comes after the content");
+  });
+
   it("answers an unchanged sitemap with 304", async () => {
     const tag = (await get("/sitemap.xml")).headers.get("etag");
     assert.equal((await get("/sitemap.xml", { "If-None-Match": tag })).status, 304);

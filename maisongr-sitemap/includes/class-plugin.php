@@ -17,6 +17,9 @@ final class Plugin {
 
 	private const QUERY_VAR = 'maisongr_sitemap';
 
+	/** The handle of the page's stylesheet and script. */
+	private const HANDLE = 'maisongr-sitemap-page';
+
 	/** Bumped when the rewrite rules change, so they are flushed once after an update. */
 	private const RULES_VERSION = '1';
 
@@ -128,11 +131,31 @@ final class Plugin {
 		 * @param bool $credit Whether to show it.
 		 */
 		$credit = (bool) apply_filters( 'maisongr_sitemap_credit', false );
+		self::register_assets();
 		return array(
-			'credit' => $credit,
-			'home'   => '' !== $home ? $home : '/',
-			'lang'   => get_locale(),
+			'credit'  => $credit,
+			'home'    => '' !== $home ? $home : '/',
+			'lang'    => get_locale(),
+			'styles'  => self::printed( 'wp_print_styles' ),
+			'scripts' => self::printed( 'wp_print_scripts' ),
 		);
+	}
+
+	/**
+	 * The page's stylesheet and script, registered with WordPress. The page is a document of
+	 * its own, outside any theme (no wp_head), so it prints only these two handles.
+	 */
+	private static function register_assets(): void {
+		$url = self::sitemap_url();
+		wp_register_style( self::HANDLE, add_query_arg( 'asset', 'page.css', $url ), array(), MAISONGR_SITEMAP_VERSION );
+		wp_register_script( self::HANDLE, add_query_arg( 'asset', 'page.js', $url ), array(), MAISONGR_SITEMAP_VERSION, array( 'strategy' => 'defer' ) );
+	}
+
+	/** What wp_print_styles() or wp_print_scripts() prints for the page's handle. */
+	private static function printed( callable $print ): string {
+		ob_start();
+		$print( self::HANDLE );
+		return (string) ob_get_clean();
 	}
 
 	public static function serve(): void {
