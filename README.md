@@ -40,7 +40,9 @@ Deactivating the plugin brings WordPress's own sitemap back.
 
 ## Install
 
-The first release, and the listing on WordPress.org, come in December 2026. Until then, build the zip from this repository (`npm ci && npm run zip`, see [Working on the plugin](#working-on-the-plugin)), then in WordPress: **Plugins → Add New Plugin → Upload Plugin**. Activate it, and open `/sitemap.xml`.
+Install it from the [WordPress.org plugin directory](https://wordpress.org/plugins/maisongr-sitemap/): in WordPress, open **Plugins → Add New Plugin**, search for "Maison GR Sitemap", install and activate it, then open `/sitemap.xml`.
+
+To try a build of this repository instead, make the zip (`npm ci && npm run zip`, see [Working on the plugin](#working-on-the-plugin)) and upload it under **Plugins → Add New Plugin → Upload Plugin**.
 
 Requires WordPress 6.5 or later and PHP 7.4 or later.
 
