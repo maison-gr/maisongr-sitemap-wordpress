@@ -50,9 +50,11 @@ Requires WordPress 6.5 or later and PHP 7.4 or later.
 
 The page reads your theme's colours and fonts from `theme.json` and the Site Editor's global styles: background, text, links, and the fonts your text and headings are set in, served from your own site. A classic theme gets its custom background colour, if it has one. The accent is used only when it reads at 3:1 on the background; otherwise the text colour stands in for it.
 
-## Languages (beta)
+## Languages
 
-With Polylang or WPML, each translation is linked to the others with `hreflang`, including `x-default`, and the page shows one row per page with its language versions beside it. This is not yet covered by automated tests: tell us if anything looks wrong.
+With Polylang or WPML, each translation is linked to the others with `hreflang`, including `x-default`, and the page shows one row per page with its language versions beside it. Unpublished translations are left out.
+
+Polylang is tested end to end on every change: a site in two languages with translated posts, pages and categories (`test/polylang.test.mjs`). WPML support is in beta: it uses WPML's public hooks, but WPML is a paid plugin, so no automated test runs it yet. Tell us if anything looks wrong.
 
 The page itself speaks English or French, following the site's language.
 
