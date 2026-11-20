@@ -3,65 +3,23 @@
 // 2. The site: /sitemap.xml lists the right addresses, answers browsers and crawlers apart,
 //    and replaces WordPress's own sitemap.
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
-import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
 import { after, before, describe, it } from "node:test";
-import { fileURLToPath } from "node:url";
 import { createSitemap, indexPage, indexXml, pageCss, urlsetPage, urlsetXml } from "maisongr-sitemap";
+import { browser, root, startSite } from "./playground.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const posix = (p) => p.split("\\").join("/");
-const PORT = 9400 + Math.floor(Math.random() * 400);
-const BASE = `http://127.0.0.1:${PORT}`;
-let server;
-/** The folder holding the run's blueprint, removed when the tests end. */
-let scratch;
-
-/**
- * The test site's blueprint, on the PHP and WordPress versions asked for (WP_PHP=7.4 WP_VERSION=6.5 npm test).
- * They go in the blueprint itself: its defaults win over the command line's --php and --wp.
- */
-function blueprint() {
-  const steps = JSON.parse(readFileSync(join(root, "test", "blueprint.json"), "utf8"));
-  scratch = mkdtempSync(join(tmpdir(), "mgr-wp-"));
-  const file = join(scratch, "blueprint.json");
-  writeFileSync(file, JSON.stringify({ ...steps, preferredVersions: { php: process.env.WP_PHP ?? "8.3", wp: process.env.WP_VERSION ?? "latest" } }));
-  return file;
-}
-
+let site;
+let BASE;
 before(async () => {
-  const cli = join(dirname(createRequire(import.meta.url).resolve("@wp-playground/cli/package.json")), "wp-playground.js");
-  // prettier-ignore
-  server = spawn(process.execPath, [
-    cli, "server", "--port", String(PORT), "--verbosity", "quiet",
-    "--mount-dir", posix(join(root, "maisongr-sitemap")), "/wordpress/wp-content/plugins/maisongr-sitemap",
-    "--mount-dir", posix(join(root, "test", "harness")), "/wordpress/maisongr-test",
-    "--mount-dir", posix(join(root, "test", "harness", "no-redirect.php")), "/internal/shared/mu-plugins/sitemap-redirect.php",
-    "--mount-dir", posix(join(root, "test", "harness", "credit-opt-in.php")), "/internal/shared/mu-plugins/credit-opt-in.php",
-    "--blueprint", posix(blueprint()),
-  ], { stdio: ["ignore", "ignore", "pipe"] });
-  let log = "";
-  server.stderr.on("data", (d) => (log += d));
-  // Ready once the plugin itself answers: WordPress serves pages before the blueprint has activated it.
-  for (let i = 0; i < 180; i++) {
-    const type = await fetch(`${BASE}/?maisongr_sitemap=1`).then((r) => r.headers.get("content-type"), () => null);
-    if (type === "application/xml; charset=utf-8") return;
-    if (server.exitCode !== null) throw new Error(`Playground stopped: ${log}`);
-    await new Promise((r) => setTimeout(r, 1000));
-  }
-  throw new Error(`Playground did not start: ${log}`);
+  site = await startSite("blueprint.json", [
+    ["harness", "/wordpress/maisongr-test"],
+    ["harness/no-redirect.php", "/internal/shared/mu-plugins/sitemap-redirect.php"],
+    ["harness/credit-opt-in.php", "/internal/shared/mu-plugins/credit-opt-in.php"],
+  ]);
+  BASE = site.base;
 });
+after(() => site?.stop());
 
-after(() => {
-  server?.kill();
-  if (scratch) rmSync(scratch, { recursive: true, force: true });
-});
-
-const browser = { "Sec-Fetch-Dest": "document", Accept: "text/html,application/xhtml+xml" };
-const get = (path, headers = {}) => fetch(`${BASE}${path}`, { headers, redirect: "manual" });
+const get = (path, headers) => site.get(path, headers);
 
 describe("parity with the maisongr-sitemap package", () => {
   const theme = {

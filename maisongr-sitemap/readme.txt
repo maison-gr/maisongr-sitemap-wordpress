@@ -35,9 +35,9 @@ A browser opening a page sends `Sec-Fetch-Dest: document` and asks for HTML; cra
 * `robots.txt` names the sitemap.
 * If Yoast SEO, Rank Math or All in One SEO also makes a sitemap, a notice says how to turn theirs off.
 
-**Languages (beta)**
+**Languages**
 
-With Polylang or WPML, translations are linked with hreflang, including x-default. The page speaks English or French, following the site's language.
+With Polylang or WPML, translations are linked with hreflang, including x-default, and unpublished translations are left out. Polylang is tested end to end; WPML support is in beta. The page speaks English or French, following the site's language.
 
 The plugin is open source: [github.com/maison-gr/maisongr-sitemap-wordpress](https://github.com/maison-gr/maisongr-sitemap-wordpress).
 
