@@ -94,6 +94,9 @@ final class Plugin {
 			$other = __( 'Rank Math makes a sitemap too. Turn off its Sitemap module (Rank Math, Dashboard), so search engines read one list.', 'maisongr-sitemap' );
 		} elseif ( function_exists( 'aioseo' ) && aioseo()->options->sitemap->general->enable ) {
 			$other = __( 'All in One SEO makes a sitemap too. Turn off its sitemap (All in One SEO, Sitemaps), so search engines read one list.', 'maisongr-sitemap' );
+		} elseif ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'sitemaps' ) ) {
+			// Jetpack answers /sitemap.xml itself, before this plugin can, so its sitemap must be turned off for this one to show.
+			$other = __( 'Jetpack makes a sitemap too, and answers /sitemap.xml before this plugin can. Turn off its Sitemaps (Jetpack, Settings, Traffic), so search engines and visitors get this one.', 'maisongr-sitemap' );
 		}
 		if ( $other ) {
 			printf( '<div class="notice notice-warning"><p><strong>%s</strong> %s</p></div>', esc_html__( 'Maison GR Sitemap:', 'maisongr-sitemap' ), esc_html( $other ) );
