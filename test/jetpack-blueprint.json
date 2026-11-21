@@ -1,0 +1,9 @@
+{
+  "steps": [
+    { "step": "setSiteOptions", "options": { "blogname": "Fern & Oak", "permalink_structure": "/%postname%/", "blog_public": "1" } },
+    { "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; wp_insert_post(['post_title' => 'Rye loaf', 'post_status' => 'publish', 'post_content' => 'Text']);" },
+    { "step": "installPlugin", "pluginData": { "resource": "url", "url": "https://downloads.wordpress.org/plugin/jetpack.16.4.zip" } },
+    { "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; update_option('jetpack_active_modules', ['sitemaps']);" },
+    { "step": "activatePlugin", "pluginPath": "/wordpress/wp-content/plugins/maisongr-sitemap/maisongr-sitemap.php" }
+  ]
+}

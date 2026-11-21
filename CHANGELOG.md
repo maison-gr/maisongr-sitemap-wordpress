@@ -4,6 +4,11 @@ All notable changes to the Maison GR Sitemap WordPress plugin. The format follow
 
 ## [Unreleased]
 
+### Fixed
+
+- With Jetpack's Sitemaps module on, `/sitemap.xml` kept serving Jetpack's XSLT sitemap, because Jetpack answers before the plugin can, and nothing said so. The admin notice now names Jetpack and where to turn its Sitemaps off. An end-to-end test boots a site with Jetpack 16.4 and checks both.
+- The admin notice also names SEOPress (its `/sitemaps.xml`) and The SEO Framework (which serves `/sitemap.xml` too), with where to turn each sitemap off, and lists every SEO plugin it finds instead of the first one only. Checked end to end with SEOPress 10.4 and The SEO Framework 5.2.1.
+
 ### Changed
 
 - Polylang support is no longer beta: an end-to-end test boots a Polylang site in two languages and checks every address's `hreflang` alternates, `x-default`, untranslated and unpublished posts, and the page's rows. WPML support stays in beta ([#1](https://github.com/maison-gr/maisongr-sitemap-wordpress/issues/1)).
