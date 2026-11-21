@@ -4,6 +4,8 @@ All notable changes to the Maison GR Sitemap WordPress plugin. The format follow
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-20
+
 ### Fixed
 
 - With Jetpack's Sitemaps module on, `/sitemap.xml` kept serving Jetpack's XSLT sitemap, because Jetpack answers before the plugin can, and nothing said so. The admin notice now names Jetpack and where to turn its Sitemaps off. An end-to-end test boots a site with Jetpack 16.4 and checks both.
