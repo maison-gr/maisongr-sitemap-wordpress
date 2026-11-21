@@ -12,7 +12,8 @@ ob_start();
 \MaisonGR\Sitemap\Plugin::notice();
 echo wp_json_encode(
 	array(
-		'notice'  => wp_strip_all_tags( (string) ob_get_clean() ),
+		// As a browser shows it: the notice escapes quotes for the admin page.
+		'notice'  => html_entity_decode( wp_strip_all_tags( (string) ob_get_clean() ), ENT_QUOTES ),
 		'jetpack' => class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'sitemaps' ),
 	)
 );

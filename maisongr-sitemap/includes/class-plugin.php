@@ -87,18 +87,32 @@ final class Plugin {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
-		$other = null;
+		// A site can run more than one of these, so each one found is named.
+		$others = array();
 		if ( class_exists( 'WPSEO_Options' ) && \WPSEO_Options::get( 'enable_xml_sitemap' ) ) {
-			$other = __( 'Yoast SEO makes a sitemap too. Turn off its XML sitemaps (Yoast SEO, Settings, Site features), so search engines read one list.', 'maisongr-sitemap' );
-		} elseif ( class_exists( '\RankMath\Helper' ) && \RankMath\Helper::is_module_active( 'sitemap' ) ) {
-			$other = __( 'Rank Math makes a sitemap too. Turn off its Sitemap module (Rank Math, Dashboard), so search engines read one list.', 'maisongr-sitemap' );
-		} elseif ( function_exists( 'aioseo' ) && aioseo()->options->sitemap->general->enable ) {
-			$other = __( 'All in One SEO makes a sitemap too. Turn off its sitemap (All in One SEO, Sitemaps), so search engines read one list.', 'maisongr-sitemap' );
-		} elseif ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'sitemaps' ) ) {
-			// Jetpack answers /sitemap.xml itself, before this plugin can, so its sitemap must be turned off for this one to show.
-			$other = __( 'Jetpack makes a sitemap too, and answers /sitemap.xml before this plugin can. Turn off its Sitemaps (Jetpack, Settings, Traffic), so search engines and visitors get this one.', 'maisongr-sitemap' );
+			$others[] = __( 'Yoast SEO makes a sitemap too. Turn off its XML sitemaps (Yoast SEO, Settings, Site features), so search engines read one list.', 'maisongr-sitemap' );
 		}
-		if ( $other ) {
+		if ( class_exists( '\RankMath\Helper' ) && \RankMath\Helper::is_module_active( 'sitemap' ) ) {
+			$others[] = __( 'Rank Math makes a sitemap too. Turn off its Sitemap module (Rank Math, Dashboard), so search engines read one list.', 'maisongr-sitemap' );
+		}
+		if ( function_exists( 'aioseo' ) && aioseo()->options->sitemap->general->enable ) {
+			$others[] = __( 'All in One SEO makes a sitemap too. Turn off its sitemap (All in One SEO, Sitemaps), so search engines read one list.', 'maisongr-sitemap' );
+		}
+		// SEOPress 10.4 serves /sitemaps.xml only when both its sitemap setting and its sitemap feature are on.
+		$seopress_sitemap = get_option( 'seopress_xml_sitemap_option_name' );
+		$seopress_toggle  = get_option( 'seopress_toggle' );
+		if ( defined( 'SEOPRESS_VERSION' ) && '1' === ( $seopress_sitemap['seopress_xml_sitemap_general_enable'] ?? '' ) && '1' === ( $seopress_toggle['toggle-xml-sitemap'] ?? '' ) ) {
+			$others[] = __( 'SEOPress makes a sitemap too. Turn off Enable XML Sitemap (SEO, XML - HTML Sitemap), so search engines read one list.', 'maisongr-sitemap' );
+		}
+		// The SEO Framework serves /sitemap.xml itself, the same address as this plugin.
+		if ( class_exists( '\The_SEO_Framework\Data\Plugin' ) && \The_SEO_Framework\Data\Plugin::get_option( 'sitemaps_output' ) ) {
+			$others[] = __( 'The SEO Framework makes a sitemap too, at the same address. Turn off "Output optimized sitemap?" (SEO, Settings, Sitemap Settings), so search engines and visitors get this one.', 'maisongr-sitemap' );
+		}
+		// Jetpack answers /sitemap.xml itself, before this plugin can, so its sitemap must be turned off for this one to show.
+		if ( class_exists( 'Jetpack' ) && \Jetpack::is_module_active( 'sitemaps' ) ) {
+			$others[] = __( 'Jetpack makes a sitemap too, and answers /sitemap.xml before this plugin can. Turn off its Sitemaps (Jetpack, Settings, Traffic), so search engines and visitors get this one.', 'maisongr-sitemap' );
+		}
+		foreach ( $others as $other ) {
 			printf( '<div class="notice notice-warning"><p><strong>%s</strong> %s</p></div>', esc_html__( 'Maison GR Sitemap:', 'maisongr-sitemap' ), esc_html( $other ) );
 		}
 	}

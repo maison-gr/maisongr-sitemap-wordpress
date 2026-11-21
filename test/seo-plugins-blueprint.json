@@ -1,0 +1,9 @@
+{
+  "steps": [
+    { "step": "setSiteOptions", "options": { "blogname": "Fern & Oak", "permalink_structure": "/%postname%/", "blog_public": "1" } },
+    { "step": "installPlugin", "pluginData": { "resource": "url", "url": "https://downloads.wordpress.org/plugin/wp-seopress.10.4.zip" } },
+    { "step": "installPlugin", "pluginData": { "resource": "url", "url": "https://downloads.wordpress.org/plugin/autodescription.5.2.1.zip" } },
+    { "step": "runPHP", "code": "<?php require '/wordpress/wp-load.php'; update_option('seopress_xml_sitemap_option_name', ['seopress_xml_sitemap_general_enable' => '1']); update_option('seopress_toggle', ['toggle-xml-sitemap' => '1']); $o = (array) get_option('autodescription-site-settings', []); $o['sitemaps_output'] = 1; update_option('autodescription-site-settings', $o);" },
+    { "step": "activatePlugin", "pluginPath": "/wordpress/wp-content/plugins/maisongr-sitemap/maisongr-sitemap.php" }
+  ]
+}
