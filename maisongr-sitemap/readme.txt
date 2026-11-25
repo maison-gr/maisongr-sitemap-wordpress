@@ -4,7 +4,7 @@ Tags: sitemap, xml sitemap, seo, google, search engines
 Requires at least: 6.5
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: MIT
 License URI: https://opensource.org/licenses/MIT
 
@@ -70,6 +70,10 @@ No. Both list exactly the same addresses: one list presented two ways. The page 
 1. The sitemap page in Twenty Twenty-Five: every page, grouped by section, with a filter and a newest-first sort.
 
 == Changelog ==
+
+= 1.0.2 =
+* Tested up to WordPress 7.2, and on PHP 8.6.
+* A theme colour with transparency (as in WordPress 7.2's default theme) is now measured as it shows on the page, so a faint text colour can no longer pass the readability check.
 
 = 1.0.1 =
 * The admin notice now names Jetpack, SEOPress and The SEO Framework when they make their own sitemap, with where to turn it off, and every SEO plugin it finds. Jetpack and The SEO Framework answer /sitemap.xml themselves, so their sitemap must be off for this one to show.

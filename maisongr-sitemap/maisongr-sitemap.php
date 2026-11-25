@@ -3,7 +3,7 @@
  * Plugin Name:       Maison GR Sitemap
  * Plugin URI:        https://github.com/maison-gr/maisongr-sitemap-wordpress
  * Description:       One sitemap, two readers: the XML search engines need at /sitemap.xml, and a page in your theme's own colours and type for people who open it.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Author:            Maison GR Inc.
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MAISONGR_SITEMAP_VERSION', '1.0.1' );
+define( 'MAISONGR_SITEMAP_VERSION', '1.0.2' );
 define( 'MAISONGR_SITEMAP_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once MAISONGR_SITEMAP_DIR . 'includes/class-strings.php';
