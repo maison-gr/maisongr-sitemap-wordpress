@@ -144,22 +144,34 @@ final class Theme {
 		);
 	}
 
-	/** @return array{0:int,1:int,2:int}|null sRGB of a hex colour; null for other formats. */
-	private static function rgb( string $color ): ?array {
-		if ( ! preg_match( '/^#([0-9a-f]{3,8})$/i', $color, $m ) ) {
+	/** @return array{0:float,1:float,2:float,3:float}|null sRGB and alpha (0–1) of a hex colour (#rgb, #rgba, #rrggbb, #rrggbbaa); null for other formats. */
+	private static function rgba( string $color ): ?array {
+		if ( ! preg_match( '/^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i', $color, $m ) ) {
 			return null;
 		}
-		$hex = strlen( $m[1] ) <= 4 ? implode( '', array_map( static function ( $c ) { return $c . $c; }, str_split( substr( $m[1], 0, 3 ) ) ) ) : substr( $m[1], 0, 6 ); // phpcs:ignore
-		return array( hexdec( substr( $hex, 0, 2 ) ), hexdec( substr( $hex, 2, 2 ) ), hexdec( substr( $hex, 4, 2 ) ) );
+		$hex = strlen( $m[1] ) <= 4 ? implode( '', array_map( static function ( $c ) { return $c . $c; }, str_split( $m[1] ) ) ) : $m[1]; // phpcs:ignore
+		$alpha = strlen( $hex ) === 8 ? hexdec( substr( $hex, 6, 2 ) ) / 255 : 1.0;
+		return array( (float) hexdec( substr( $hex, 0, 2 ) ), (float) hexdec( substr( $hex, 2, 2 ) ), (float) hexdec( substr( $hex, 4, 2 ) ), $alpha );
 	}
 
-	/** WCAG contrast ratio of two hex colours, or null for other formats. */
+	/** A colour as it shows over another (alpha compositing); the lower one over white when it is translucent too. */
+	private static function over( array $top, array $under ): array {
+		if ( $under[3] < 1 ) {
+			$under = self::over( $under, array( 255.0, 255.0, 255.0, 1.0 ) );
+		}
+		$a = $top[3];
+		return array( $top[0] * $a + $under[0] * ( 1 - $a ), $top[1] * $a + $under[1] * ( 1 - $a ), $top[2] * $a + $under[2] * ( 1 - $a ), 1.0 );
+	}
+
+	/** WCAG contrast ratio of two hex colours, the first shown on the second (so a translucent one counts as it looks), or null for other formats. */
 	public static function contrast( string $a, string $b ): ?float {
-		$x = self::rgb( $a );
-		$y = self::rgb( $b );
-		if ( ! $x || ! $y ) {
+		$top   = self::rgba( $a );
+		$under = self::rgba( $b );
+		if ( ! $top || ! $under ) {
 			return null;
 		}
+		$y = self::over( array( 0.0, 0.0, 0.0, 0.0 ), $under );
+		$x = self::over( $top, $y );
 		$lum = static function ( array $c ): float {
 			$v = array_map(
 				static function ( $n ) {
