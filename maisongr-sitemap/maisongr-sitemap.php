@@ -6,7 +6,7 @@
  * Version:           1.0.1
  * Requires at least: 6.5
  * Requires PHP:      7.4
- * Author:            Maison GR
+ * Author:            Maison GR Inc.
  * Author URI:        https://www.maisongr.com
  * License:           MIT
  * License URI:       https://opensource.org/licenses/MIT
