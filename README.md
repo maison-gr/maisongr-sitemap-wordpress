@@ -89,6 +89,15 @@ npm run zip    # dist/maisongr-sitemap.zip, ready to upload
 
 Issues and pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md), and report security problems privately ([SECURITY.md](SECURITY.md)).
 
+## More from Maison GR
+
+Open source from [Maison GR](https://www.maisongr.com), a software studio in Québec City:
+
+- [maisongr-sitemap](https://github.com/maison-gr/maisongr-sitemap): one sitemap, two readers. The XML search engines need, and a page in your site's own design for people.
+- [maisongr-skills](https://github.com/maison-gr/maisongr-skills): one engineering standard for every AI coding agent: Claude Code, Codex, Cursor, Copilot, Gemini CLI.
+- [maisongr-typo](https://github.com/maison-gr/maisongr-typo): French typography, the Québec way, with a CI check.
+- [maisongr-law25](https://github.com/maison-gr/maisongr-law25): your Law 25 privacy impact assessment, next to your code, checked in CI.
+
 ## License
 
-[MIT](LICENSE), by [Maison GR](https://www.maisongr.com). Other open-source work from the studio: [maisongr-sitemap](https://github.com/maison-gr/maisongr-sitemap) for Next.js, Astro, Nuxt and more, and [maisongr-skills](https://github.com/maison-gr/maisongr-skills) for AI coding agents.
+[MIT](LICENSE) © [Maison GR Inc.](https://www.maisongr.com)
