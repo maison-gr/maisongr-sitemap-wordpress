@@ -91,7 +91,8 @@ describe("parity with the maisongr-sitemap package", () => {
 
 describe("the sitemap on a WordPress site", () => {
   it("runs on the WordPress version asked for", { skip: !process.env.WP_VERSION }, async () => {
-    const generator = (await (await get("/")).text()).match(/<meta name="generator" content="WordPress ([\d.]+)/)?.[1];
+    // The whole version, so "7.2-RC3" is checked as asked, not only its "7.2".
+    const generator = (await (await get("/")).text()).match(/<meta name="generator" content="WordPress ([^"]+)"/)?.[1];
     assert.ok(generator?.startsWith(process.env.WP_VERSION), `WordPress ${generator}`);
   });
 
@@ -127,13 +128,37 @@ describe("the sitemap on a WordPress site", () => {
 
   it("serves the page's stylesheet in the theme's colours and fonts, and its script", async () => {
     const css = await (await get("/sitemap.xml?asset=page.css")).text();
-    // The default theme's own font: Manrope in Twenty Twenty-Five; older default themes set none in WOFF2 files.
-    if (!process.env.WP_VERSION) assert.match(css, /@font-face\{font-family:"Manrope"/);
-    assert.match(css, /^:root\{--bg:#[0-9A-Fa-f]{6};--fg:#[0-9A-Fa-f]{6};/m);
+    // The default theme's own font, in its WOFF2 file: Manrope in Twenty Twenty-Five, Inter in WordPress 7.2's theme;
+    // older default themes set none.
+    const [major, minor = 0] = (process.env.WP_VERSION || "99").split(/[.-]/).map(Number);
+    if (major > 6 || (major === 6 && minor >= 7)) assert.match(css, /@font-face\{font-family:"[^"]+";src:url\("[^"]+\.woff2"\)/);
+    // Hex with or without alpha: WordPress 7.2's default theme writes its text #000000bf.
+    assert.match(css, /^:root\{--bg:#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?;--fg:#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?;/m);
     assert.ok(!css.startsWith("/*"), "no banner comment");
     const js = await get("/sitemap.xml?asset=page.js");
     assert.equal(js.headers.get("content-type"), "text/javascript; charset=utf-8");
     assert.match(await js.text(), /^\(function \(\) \{/);
+  });
+
+  it("measures a translucent colour as it shows on the background, not as if it were solid", async () => {
+    const palette = async (body) => (await fetch(`${BASE}/maisongr-test/contrast.php`, { method: "POST", body: JSON.stringify(body) })).json();
+    // 30% black on white shows as #b2b2b2: about 2.1:1, below AA, so the page mixes its own muted text instead.
+    const faint = await palette({ background: "#ffffff", foreground: "#000000", muted: "#0000004d" });
+    assert.ok(faint.contrast > 2 && faint.contrast < 2.3, `contrast ${faint.contrast}`);
+    assert.equal(faint.palette.muted, "color-mix(in srgb, #000000 68%, #ffffff)");
+    // 75% black, as WordPress 7.2's default theme sets its text, still reads: about 10:1, kept.
+    const text = await palette({ background: "#fcfcfc", foreground: "#000000bf", muted: "#000000bf" });
+    assert.ok(text.contrast > 9.5 && text.contrast < 11, `contrast ${text.contrast}`);
+    assert.equal(text.palette.muted, "#000000bf");
+    // A translucent accent too pale to mark focus is dropped for the text colour.
+    const accent = await palette({ background: "#ffffff", foreground: "#111111", accent: "#0000ff33" });
+    assert.equal(accent.palette.accent, "#111111");
+  });
+
+  it("loads every class and runs its checks with no notice or deprecation (CI runs the same on PHP 8.6)", async () => {
+    const out = await (await fetch(`${BASE}/maisongr-test/php-compat.php`)).text();
+    assert.doesNotMatch(out, /Failed/, out);
+    assert.match(out, /done\n$/, out);
   });
 
   it("loads the page's stylesheet and script through WordPress's enqueue API", async () => {

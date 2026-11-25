@@ -4,6 +4,16 @@ All notable changes to the Maison GR Sitemap WordPress plugin. The format follow
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-25
+
+### Fixed
+
+- A translucent theme colour (`#rrggbbaa` or `#rgba`) was measured as if it were solid, so a faint grey could pass the AA check for the page's secondary text, and a pale accent the 3:1 check for focus rings. The contrast is now measured as the colour shows on the page background. WordPress 7.2's default theme writes its colours with alpha.
+
+### Changed
+
+- Tested up to WordPress 7.2 (checked on 7.2-RC3 with PHP 8.5) and on PHP 8.6: CI now runs the end-to-end tests on WordPress's next release, and loads and runs the plugin's own code on PHP 8.6.
+
 ## [1.0.1] - 2026-11-20
 
 ### Fixed
