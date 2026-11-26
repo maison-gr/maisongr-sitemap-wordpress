@@ -8,7 +8,7 @@
 ![PHP 7.4+](https://img.shields.io/badge/PHP-%E2%89%A57.4-1b1a17)
 ![No settings to learn](https://img.shields.io/badge/settings-none-1b1a17)
 
-![One address, two answers: at https://your.site/sitemap.xml, Google and Bing get the standard XML sitemap, and a person opening the same address in a browser gets a page in the site's own design.](.github/assets/hero.png)
+![Maison GR open source, 02: Maison GR Sitemap, for WordPress. At your.site/sitemap.xml, Googlebot and Bingbot get the XML sitemap and a person in a browser gets a page in the theme's design; every page listed, WordPress's own sitemap redirected.](.github/assets/hero.jpg)
 
 It's the WordPress edition of [maisongr-sitemap](https://github.com/maison-gr/maisongr-sitemap), the sitemap tool for Next.js, Astro, Nuxt and other frameworks. Both render the same page from the same design, and a test checks they match byte for byte.
 
